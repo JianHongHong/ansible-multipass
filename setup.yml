@@ -1,0 +1,24 @@
+# setup node-exporter once machine is provisioned
+- name: Set up on new servers
+  hosts: servers
+  become: true
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Create monitoring directory if it does not exist
+      ansible.builtin.file:
+        path: "{{ monitoring_directory }}"
+        state: directory
+        
+    - name: Add node-exporter for prometheus monitoring
+      template:
+        src: templates/node-exporter.yml.j2
+        dest: "{{ monitoring_directory }}/docker-compose.yml"
+
+    - name: Run docker-compose up to start node-exporter
+      ansible.builtin.shell: "cd {{ monitoring_directory }} && sudo docker compose up -d"
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output

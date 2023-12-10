@@ -1,0 +1,6 @@
+server_name:
+  - vm0
+  - vm1
+  - vm2
+
+monitoring_directory: /opt/monitoring

@@ -1,0 +1,17 @@
+# provison multiple multipass vm using anisble quickly using cloud init
+- name: Set up on new servers
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: multipass provision instances
+      command: "multipass launch -n {{ item }} docker --cloud-init cloud-init.yaml"
+      loop: "{{ server_name }}"
+
+    - name: Print out all ip address of instances
+      shell: multipass list
+      register: ip_addr
+
+    - name: Print stdout of ip_addr
+      ansible.builtin.debug:
+        msg: "{{ ip_addr.stdout }}" 

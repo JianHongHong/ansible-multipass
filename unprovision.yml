@@ -1,0 +1,19 @@
+- name: Remnove created servers
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: multipass delete instances
+      command: "multipass delete {{ item }} "
+      loop: "{{ server_name }}"
+
+    - name: multipass purge
+      ansible.builtin.command: multipass purge
+
+    - name: Print out all instances
+      shell: multipass list
+      register: ip_addr
+
+    - name: Print stdout of ip_addr
+      ansible.builtin.debug:
+        msg: "{{ ip_addr.stdout }}" 
